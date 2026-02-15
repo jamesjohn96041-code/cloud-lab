@@ -1,0 +1,13 @@
+<h1>Frontend</h1>
+<button onclick="callAPI()">Call Backend</button>
+<p id="result"></p>
+
+<script>
+function callAPI() {
+  fetch("/api/data")
+    .then(res => res.text())
+    .then(data => {
+      document.getElementById("result").innerText = data;
+    });
+}
+</script>

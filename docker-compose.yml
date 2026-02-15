@@ -1,0 +1,51 @@
+services:
+  db:
+    image: postgres:16
+    container_name: postgres
+    env_file:
+      - ./.env.local
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - my-vnet
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+
+  backend:
+    image: jame030604/cloud-lab-backend:latest
+    container_name: backend
+    env_file:
+      - ./.env.local
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - my-vnet
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:5000/health').read()"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 20s
+
+  frontend:
+    image: jame030604/cloud-lab-frontend:latest
+    container_name: frontend
+    ports:
+      - "8080:80"
+    environment:
+      BACKEND_BASE_URL: "http://backend:5000"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - my-vnet
+
+networks:
+  my-vnet:
+
+volumes:
+  pgdata:

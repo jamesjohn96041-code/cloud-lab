@@ -1,0 +1,16 @@
+name: cloud-lab-frontend
+type: Microsoft.App/containerApps
+properties:
+  environmentId: /subscriptions/<SUB_ID>/resourceGroups/<RG>/providers/Microsoft.App/managedEnvironments/<ENV_NAME>
+  configuration:
+    ingress:
+      external: true
+      targetPort: 80
+      transport: auto
+  template:
+    containers:
+      - name: frontend
+        image: nginx:alpine
+        resources:
+          cpu: 0.25
+          memory: 0.5Gi

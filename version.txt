@@ -1,0 +1,9 @@
+Browser
+→ Nginx (dynamic BACKEND_BASE_URL)
+→ Flask backend
+→ Postgres
+→ Healthcheck working
+→ Docker Hub images
+→ Azure Container Apps YAML ready
+
+That’s not beginner anymore.

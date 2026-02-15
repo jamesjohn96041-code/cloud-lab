@@ -1,0 +1,25 @@
+name: cloud-lab-backend
+type: Microsoft.App/containerApps
+properties:
+  environmentId: /subscriptions/<SUB_ID>/resourceGroups/<RG>/providers/Microsoft.App/managedEnvironments/<ENV_NAME>
+  configuration:
+    ingress:
+      external: false
+      targetPort: 5000
+      transport: auto
+    secrets:
+      - name: database-url
+        value: "postgresql://admin:password@<AZURE_PG_HOST>:5432/mydb?sslmode=require"
+  template:
+    containers:
+      - name: backend
+        image: jame030604/cloud-lab-backend:latest
+        env:
+          - name: DATABASE_URL
+            secretRef: database-url
+        resources:
+          cpu: 0.5
+          memory: 1Gi
+    scale:
+      minReplicas: 0
+      maxReplicas: 2
